@@ -2,8 +2,9 @@
 
 namespace api\modules\v1\controllers;
 
-use yii\rest\Controller;
 
+use \JsonRpc2\Controller;
+use backend\modules\Product\models\Product;
 
 /**
  * Class ArticleController
@@ -11,8 +12,11 @@ use yii\rest\Controller;
  * @author Eugene Terentev <eugene@terentev.net>
  */
 class WorkerController extends Controller {
+
+
     public function actions()
     {
+
         return array(
             'index' => array(
                 'class' => \nizsheanez\jsonRpc\Action::class,
@@ -20,7 +24,21 @@ class WorkerController extends Controller {
         );
     }
 
-    public function sum($a, $b) {
-        return $a + $b;
+    public function actionSum($a,$b) {
+
+        return $a+$b;
+    }
+    public function actionProduct($id){
+        $myProduct=new Product();
+        $myProduct=$myProduct->getProdById($id);
+        return $myProduct;
+
+
+
+
+    }
+    public function yell($message){
+
+        return 'yellelek echoval de nem variablel';
     }
 }
