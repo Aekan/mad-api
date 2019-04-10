@@ -5,6 +5,8 @@ namespace api\modules\v1\controllers;
 
 use \JsonRpc2\Controller;
 use backend\modules\Product\models\Product;
+use Yii;
+use yii\web\Response;
 
 /**
  * Class ArticleController
@@ -49,6 +51,11 @@ class WorkerController extends Controller {
         // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
         $behaviors['authenticator']['except'] = ['options'];
         return $behaviors;
+    }
+
+    public function beforeAction($action){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return true;
     }
 
 
