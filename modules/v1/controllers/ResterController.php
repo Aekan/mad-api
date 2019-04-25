@@ -23,11 +23,12 @@ class ResterController extends Controller {
         return $a + $b;
     }
 
-
     public function actionProduct($id = false) {
         $myProduct = $id ? Product::getProdById($id) : Product::getAllProducts();
+        
         return $myProduct;
     }
+    
     public function actionYell(){
         return 'yellelek echoval de nem variablel';
     }
