@@ -3,6 +3,8 @@
 namespace api\modules\v1\controllers;
 
 
+use backend\modules\Product\models\ProductSource;
+use backend\modules\Reservations\models\ReservationsAdminSearchModel;
 use \JsonRpc2\Controller;
 use backend\modules\Product\models\Product;
 
@@ -37,8 +39,35 @@ class WorkerController extends Controller {
 
 
     }
-    public function yell($message){
+    public function actionYell($selectedDate,$prodId){
+        $currentSelftSp=new ReservationsAdminSearchModel();
+        $sources=ProductSource::getProductSourceIds($prodId);
 
-        return 'yellelek echoval de nem variablel';
+        $what = ['*'];
+        $from = $currentSelftSp::tableName();
+
+        $wheres=[];
+        $wheres[]=['bookingDate', '=', $selectedDate];
+        $wheres[]=['productId', 'IN', $sources];
+        $where = $currentSelftSp::andWhereFilter($wheres);
+
+        $rows = $currentSelftSp::aSelect(ReservationsAdminSearchModel::class, $what, $from, $where,$sources,$prodId);
+
+        $bookigsFromThatDay=$rows->all();
+        $counter=0;
+        foreach ($bookigsFromThatDay as $reservation){
+            if(isset($reservation->bookedChairsCount)){
+                $counter=$counter+$reservation->bookedChairsCount;
+
+            }
+        }
+        $currentProduct=Product::getProdById($prodId);
+        $placesleft=$currentProduct->capacity-$counter;
+        if($placesleft%3!=0){
+            $placesleft-=1;
+        }
+        return $placesleft;
+
+
     }
 }

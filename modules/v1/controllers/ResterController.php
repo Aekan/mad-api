@@ -6,6 +6,8 @@ namespace api\modules\v1\controllers;
 
 use backend\controllers\Controller;
 use backend\modules\Product\models\Product;
+use backend\modules\Product\models\ProductSource;
+use backend\modules\Reservations\models\ReservationsAdminSearchModel;
 
 /**
  * Class ArticleController
@@ -28,8 +30,37 @@ class ResterController extends Controller {
         
         return $myProduct;
     }
-    
-    public function actionYell(){
-        return 'yellelek echoval de nem variablel';
+    public function actionYell($selectedDate,$prodId){
+        $currentSelftSp=new ReservationsAdminSearchModel();
+        $sources=ProductSource::getProductSourceIds($prodId);
+
+        $what = ['*'];
+        $from = $currentSelftSp::tableName();
+
+        $wheres=[];
+        $wheres[]=['bookingDate', '=', $selectedDate];
+        $wheres[]=['productId', 'IN', $sources];
+        $where = $currentSelftSp::andWhereFilter($wheres);
+
+        $rows = $currentSelftSp::aSelect(ReservationsAdminSearchModel::class, $what, $from, $where,$sources,$prodId);
+
+        $bookigsFromThatDay=$rows->all();
+        $counter=0;
+        foreach ($bookigsFromThatDay as $reservation){
+            if(isset($reservation->bookedChairsCount)){
+                $counter=$counter+$reservation->bookedChairsCount;
+
+            }
+        }
+        $currentProduct=Product::getProdById($prodId);
+        $placesleft=$currentProduct->capacity-$counter;
+        if($placesleft%2!=0){
+            $placesleft-=1;
+        }
+        return $placesleft;
+
+
     }
+
+
 }
