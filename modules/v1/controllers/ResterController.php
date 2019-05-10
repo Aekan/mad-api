@@ -31,7 +31,12 @@ class ResterController extends Controller {
         return $myProduct;
     }
     public function actionYell($selectedDate,$prodId){
+
         $currentSelftSp=new ReservationsAdminSearchModel();
+        /**
+        TODO: Handler if Product does not exitst
+         *
+         */
         $sources=ProductSource::getProductSourceIds($prodId);
 
         $what = ['*'];
@@ -52,6 +57,8 @@ class ResterController extends Controller {
 
             }
         }
+        $currentProduct=new Product();
+
         $currentProduct=Product::getProdById($prodId);
         $placesleft=$currentProduct->capacity-$counter;
         if($placesleft%2!=0){
