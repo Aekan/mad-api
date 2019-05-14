@@ -6,8 +6,10 @@ namespace api\modules\v1\controllers;
 
 use backend\controllers\Controller;
 use backend\modules\Product\models\Product;
+use backend\modules\ModulusCart\models\ModulusCart;
 use backend\modules\Product\models\ProductSource;
 use backend\modules\Reservations\models\ReservationsAdminSearchModel;
+
 
 /**
  * Class ArticleController
@@ -68,6 +70,15 @@ class ResterController extends Controller {
 
 
     }
+    public function actionCcart($id) {
+        $newCart= new ModulusCart();
+        $values=['id'=>$id];
+
+
+        return  Product::insertOne($newCart,$values);
+
+    }
+
 
 
 }
