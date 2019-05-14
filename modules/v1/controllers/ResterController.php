@@ -9,6 +9,7 @@ use backend\modules\Product\models\Product;
 use backend\modules\ModulusCart\models\ModulusCart;
 use backend\modules\Product\models\ProductSource;
 use backend\modules\Reservations\models\ReservationsAdminSearchModel;
+use Matrix\Exception;
 
 
 /**
@@ -72,10 +73,39 @@ class ResterController extends Controller {
     }
     public function actionCcart($id) {
         $newCart= new ModulusCart();
-        $values=['id'=>$id];
+        $values=['id'=>$id,'createDate'=>date('Y-m-d'),];
 
 
-        return  Product::insertOne($newCart,$values);
+        return  ModulusCart::insertOne($newCart,$values);
+
+    }
+    public function actionCcadd($id,$items) {
+
+        $query = ModulusCart::aSelect(ModulusCart::class, '*', ModulusCart::tableName(), 'id=' . $id);
+
+        try {
+            $model = $query->one();
+        } catch (Exception $e) {
+        }
+
+        if(json_decode($model->items)){
+          $currentItems=json_decode($model->items);
+          $currentItems->items[]=$items;
+        }
+        else{
+         $currentItems=json_decode('{"items":[]}');
+         $currentItems->items[]=$items;
+
+        }
+
+
+        $values=[
+            'id'=>$id,
+            'items'=>$items,
+        ];
+
+
+        return  ModulusCart::insertOne($model,$values);
 
     }
 
