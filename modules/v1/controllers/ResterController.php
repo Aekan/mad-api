@@ -79,9 +79,20 @@ class ResterController extends Controller {
         return  ModulusCart::insertOne($newCart,$values);
 
     }
+    public function actionGetcart($id) {
+        $query = ModulusCart::aSelect(ModulusCart::class, '*', ModulusCart::tableName(), 'id=' . $id);
+
+        try {
+            $model = $query->one();
+        } catch (Exception $e) {
+        }
+
+        return  $model->items;
+
+    }
     public function actionCcadd($id,$items) {
 
-        $query = ModulusCart::aSelect(ModulusCart::class, '*', ModulusCart::tableName(), 'id=' . $id);
+        $query = ModulusCart::aSelect(ModulusCart::class, '*', ModulusCart::tableName(), 'id="' . $id.'"');
 
         try {
             $model = $query->one();
