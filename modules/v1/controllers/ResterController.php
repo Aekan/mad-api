@@ -11,6 +11,7 @@ use backend\modules\Product\models\ProductSource;
 use backend\modules\Reservations\models\Reservations;
 use backend\modules\Reservations\models\ReservationsAdminSearchModel;
 use Matrix\Exception;
+use Yii;
 
 
 /**
@@ -123,15 +124,16 @@ class ResterController extends Controller {
 
     public function actionAddReservation($data) {
         $reservation = new Reservations();
-        $data = json_decode($data);
+
+        $response = json_decode($data);
 
         $values = [
             'bookingId' => null,
-            'source' => $data->source,
-            'data' => $data->data,
-            'productId' => $data->productId,
+            'source' => $response->source,
+            'data' => $response->data,
+            'productId' => $response->productId,
             'invoiceDate' => date('Y-m-d'),
-            'bookingDate' => $data->bookingDate,
+            'bookingDate' => $response->bookingDate,
         ];
 
         return Reservations::insertOne($reservation, $values);
