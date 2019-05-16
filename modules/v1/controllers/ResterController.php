@@ -5,6 +5,9 @@ namespace api\modules\v1\controllers;
 
 
 use backend\controllers\Controller;
+use backend\modules\Order\models\Order;
+use backend\modules\Payment\controllers\PaymentController;
+use backend\modules\Payment\models\Payment;
 use backend\modules\Product\models\Product;
 use backend\modules\ModulusCart\models\ModulusCart;
 use backend\modules\Product\models\ProductSource;
@@ -24,6 +27,13 @@ class ResterController extends Controller {
         return array(
             'index' => array(),
         );
+    }
+
+    public function beforeAction($action) {
+        //if ("ipn" === Yii::$app->controller->action->id)
+            $this->enableCsrfValidation = false;
+
+        return parent::beforeAction($action);
     }
 
     public function actionIndex($a, $b) {
@@ -123,19 +133,53 @@ class ResterController extends Controller {
     }
 
     public function actionAddReservation($data) {
-        $reservation = new Reservations();
-
         $response = json_decode($data);
+        $reservationsData = json_decode($response->data);
+        $ids = [];
 
-        $values = [
-            'bookingId' => null,
-            'source' => $response->source,
-            'data' => $response->data,
-            'productId' => $response->productId,
-            'invoiceDate' => date('Y-m-d'),
-            'bookingDate' => $response->bookingDate,
-        ];
+        foreach ($reservationsData as $i => $reservationData) {
+            $reservation = new Reservations();
 
-        return Reservations::insertOne($reservation, $values);
+            $values = [
+                'bookingId' => null,
+                'source' => $response->source,
+                'data' => json_encode($reservationData),
+                'productId' => $response->productId,
+                'invoiceDate' => date('Y-m-d'   ),
+                'bookingDate' => $response->bookingDate,
+            ];
+
+            $ids[] = Reservations::insertOneReturn($reservation, $values);
+        }
+
+        return PaymentController::actionPay($ids);
+    }
+
+    public function actionGetOrder($id) {
+        return Order::getOrderById($id);
+    }
+
+    public function actionBackref() {
+        return PaymentController::actionBackref();
+    }
+
+    public static function actionTimeout() {
+        return PaymentController::actionTimeout();
+    }
+
+    public static function actionIrn() {
+        return PaymentController::actionIrn();
+    }
+
+    public static function actionIdn() {
+        return PaymentController::actionIdn();
+    }
+
+    public static function actionIos() {
+        return PaymentController::actionIos();
+    }
+
+    public static function actionIpn() {
+        return PaymentController::actionIpn();
     }
 }

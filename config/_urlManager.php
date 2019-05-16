@@ -23,5 +23,14 @@ return [
                 'options'
             ]
         ],
+        [
+            'class' => 'yii\rest\UrlRule',
+            'controller' => 'api/v1/rester',
+            'only' => [
+                'index',
+                'view',
+                'options'
+            ]
+        ],
     ]
 ];

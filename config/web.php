@@ -42,4 +42,6 @@ $config = [
     ]
 ];
 
+define("OTP", "../../simplepay/");
+
 return $config;
