@@ -134,6 +134,7 @@ class ResterController extends Controller {
 
     public function actionAddReservation($data) {
         $response = json_decode($data);
+
         $reservationsData = json_decode($response->data);
         $ids = [];
 
