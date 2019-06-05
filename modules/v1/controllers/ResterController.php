@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers;
 
 
 use backend\controllers\Controller;
+use backend\modules\content\controllers\PageController;
 use backend\modules\Order\models\Order;
 use backend\modules\Payment\controllers\PaymentController;
 use backend\modules\Payment\models\Payment;
@@ -182,5 +183,9 @@ class ResterController extends Controller {
 
     public static function actionIpn() {
         return PaymentController::actionIpn();
+    }
+
+    public static function actionGetPageBySlug($slug) {
+        return PageController::getContent($slug);
     }
 }
