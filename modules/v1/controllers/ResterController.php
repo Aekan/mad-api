@@ -16,6 +16,7 @@ use backend\modules\Reservations\models\Reservations;
 use backend\modules\Reservations\models\ReservationsAdminSearchModel;
 use Matrix\Exception;
 use Yii;
+use yii\helpers\BaseHtml;
 
 
 /**
@@ -188,4 +189,22 @@ class ResterController extends Controller {
     public static function actionGetPageBySlug($slug) {
         return PageController::getContent($slug);
     }
+
+    /**
+     * @param $slug
+     * @return mixed|string
+     * This is for the pagebulder
+     */
+    public static function actionGetPageHtmlBySlug($slug) {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/html');
+        return (PageController::getContent($slug))->body;
+    }
+    public static function actionUpdatePageHtmlSlug(){
+        $content=Yii::$app->request->post('content');
+        $slug=Yii::$app->request->post('slug');
+        return PageController::setContent($slug,$content);
+    }
+
 }
