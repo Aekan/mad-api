@@ -6,6 +6,7 @@ namespace api\modules\v1\controllers;
 
 use backend\controllers\Controller;
 use backend\modules\content\controllers\PageController;
+use backend\modules\Modulusbuilder\controllers\ModulusbuilderController;
 use backend\modules\Order\models\Order;
 use backend\modules\Payment\controllers\PaymentController;
 use backend\modules\Payment\models\Payment;
@@ -205,6 +206,24 @@ class ResterController extends Controller {
         $content=Yii::$app->request->post('content');
         $slug=Yii::$app->request->post('slug');
         return PageController::setContent($slug,$content);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return mixed|string
+     * This is for the pagebulder
+     */
+    public static function actionGetEmailHtmlById($id) {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/html');
+        return (ModulusbuilderController::getContent($id))->body;
+    }
+    public static function actionUpdateEmailHtmlId(){
+        $content=Yii::$app->request->post('content');
+        $id=Yii::$app->request->post('id');
+        return ModulusbuilderController::setContent($id,$content);
     }
 
 }
