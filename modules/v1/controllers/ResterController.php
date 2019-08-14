@@ -221,17 +221,23 @@ class ResterController extends Controller {
 
         $body = (ModulusbuilderController::getContent($id))->body;
 
-        $stripfromStartArray=[
-            '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>',
-            '<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>',
-            '<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">',
-            '<head>',
-            '<html>',
-        ];
+//        $stripfromStartArray=[
+//            '<html>',
+//            '<head>',
+//            '<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">',
+//            '<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>',
+//            '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>',
+//        ];
+//
+//        foreach ($stripfromStartArray as $s) {
+//            $body = $s . $body;
+//        }
 
-        foreach ($stripfromStartArray as $s) {
-            $body = $s . $body;
-        }
+        $body = `<html>
+            <head>,
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
+            <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>` . $body;
 
         return $body;
     }
