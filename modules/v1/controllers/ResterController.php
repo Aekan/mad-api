@@ -218,7 +218,22 @@ class ResterController extends Controller {
         Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
         $headers = Yii::$app->response->headers;
         $headers->add('Content-Type', 'text/html');
-        return (ModulusbuilderController::getContent($id))->body;
+
+        $body = (ModulusbuilderController::getContent($id))->body;
+
+        $stripfromStartArray=[
+            '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>',
+            '<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>',
+            '<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">',
+            '<head>',
+            '<html>',
+        ];
+
+        foreach ($stripfromStartArray as $s) {
+            $body = $s . $body;
+        }
+
+        return $body;
     }
     public static function actionUpdateEmailHtmlId(){
         $content=Yii::$app->request->post('content');
